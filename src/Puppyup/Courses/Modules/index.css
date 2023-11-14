@@ -1,0 +1,69 @@
+.list-group.course-modules {
+    list-style: none;
+    padding: 0;
+}
+
+.list-group-item {
+    border: 1px solid lightgrey;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+}
+
+.input-field {
+    flex: 1;
+    padding: 10px;
+    margin: 0 10px;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+}
+
+.button-group {
+    display: flex;
+    align-items: center;
+
+}
+
+.button-group button {
+    margin: 5px;
+}
+
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.module-header button {
+    margin-left: 10px;
+    /* Push the "Edit" and "Delete" buttons to the right */
+}
+
+.content {
+    margin-left: 5px;
+    flex: 1;
+}
+
+.icons {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.check-icon {
+    margin-right: 10px;
+}
+
+.dots-icon {
+    color: #999;
+    /* Example color for the dots icon */
+}

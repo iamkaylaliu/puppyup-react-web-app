@@ -1,0 +1,79 @@
+/* Course Status styles */
+.learning-objectives {
+    display: flex;
+    flex-direction: column;
+}
+
+.line {
+    font-size: 0.9em;
+    margin-top: 0;
+    margin-left: 10px;
+}
+
+.a1-text {
+    color: red;
+}
+
+.due-text {
+    color: gray;
+}
+
+.red-icon {
+    color: red;
+}
+
+.gray-icon {
+    color: gray;
+}
+
+/* Course Button styles */
+.course-buttons .btn-primary {
+    background-color: lightgray;
+    color: black;
+    border: none;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 2px;
+}
+
+.course-buttons .btn-primary-long {
+    background-color: lightgray;
+    color: black;
+    border: none;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 2px;
+    width: 250px;
+    text-align: left;
+}
+
+.course-buttons .btn-secondary {
+    background-color: red;
+    color: white;
+    border: none;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 2px;
+}
+
+.course-buttons .btn-third {
+    background-color: green;
+    color: white;
+    border: none;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 2px;
+}
+
+.course-buttons .btn-primary:hover,
+.course-buttons .btn-primary:focus,
+.course-buttons .btn-secondary:hover,
+.course-buttons .btn-secondary:focus {
+    background-color: lightgrey;
+    color: black;
+}
+
+.course-buttons .btn i.fas.fa-check-circle {
+    font-size: 1.2em;
+    margin-right: 5px;
+}
+
+.course-buttons .btn-equal-height {
+    height: 40px;
+}
