@@ -1,0 +1,61 @@
+/* Course Button styles */
+.breadcrumb {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.breadcrumb-item a {
+    text-decoration: none;
+    color: red;
+}
+
+hr {
+    width: 100%;
+}
+
+.course-buttons .btn-primary {
+    background-color: lightgray;
+    color: black;
+    border: none;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 1px;
+}
+
+.course-buttons .btn-primary-long {
+    background-color: lightgray;
+    color: black;
+    border: none;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 1px;
+    width: 250px;
+    text-align: left;
+}
+
+.course-buttons .btn-secondary {
+    background-color: red;
+    color: white;
+    border: none;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 1px;
+}
+
+.course-buttons .btn-third {
+    background-color: #8bc34a;
+    color: white;
+    border: none;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 1px;
+}
+
+.course-buttons .btn-primary:hover,
+.course-buttons .btn-primary:focus,
+.course-buttons .btn-secondary:hover,
+.course-buttons .btn-secondary:focus {
+    background-color: lightgrey;
+    color: black;
+}
+
+.course-buttons .btn i.fas.fa-check-circle {
+    font-size: 1.2em;
+    margin-right: 5px;
+}
