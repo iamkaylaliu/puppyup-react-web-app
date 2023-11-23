@@ -1,0 +1,18 @@
+.wd-top-bar {
+    background-color: white;
+    width: 100%;
+    height: 80px;
+}
+
+.wd-logo {
+    width: 50px;
+    height: 50px;
+}
+
+.wd-web-app-name {
+    font-style: italic;
+    font-size: 2rem;
+    font-weight: bold;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+}

@@ -1,0 +1,44 @@
+.wd-search {
+    max-width: 1300px;
+  }
+
+
+.wd-search a {
+    text-decoration: none;
+    color: #232323;
+}
+
+.wd-search a:hover {
+    text-decoration: underline;
+}
+
+.wd-search img {
+    width: 250px;
+    height: 250px;
+    border-radius: 1rem;
+}
+
+.wd-card-width.card {
+    width: 270px;
+    margin-top:18px;
+    margin-right:36px;
+    margin-bottom: 18px;
+}
+
+.card {
+    background-color: #f0f2f5;
+    border-style: none;
+}
+
+.wd-detail img {
+    width: 500px;
+    height: 500px;
+    border-radius: 1rem;
+}
+
+
+.wd-detail {
+    display: flex;
+    flex-direction: row;
+}
+
