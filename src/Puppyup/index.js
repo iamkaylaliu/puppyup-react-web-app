@@ -1,17 +1,25 @@
 import { Route, Routes, Navigate } from "react-router";
 import KanbasNavigation from "./KanbasNavigation";
 import Courses from "./Courses";
-import Account from "./Account";
+import Account from "./users/account";
 import Dashboard from "./Dashboard";
 import db from "./Database";
 import { useState } from "react";
 import store from "./store";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import Search from "./Search/search"
 import "./index.css";
 import Details from "./Search/details";
+import SignIn from "./users/signin";
+import { Link } from "react-router-dom";
 
+import SignUp from "./users/signup";
+import UserList from "./users/list";
+import UserDetails from "./users/details";
+import CurrentUser from "./users/currentUser";
+import Welcome from "./users/welcome";
 function Puppyup() {
+   // const { currentUser } = useSelector((state) => state.userReducer);
    const [courses, setCourses] = useState(db.courses);
    const [course, setCourse] = useState({
       name: "",
@@ -48,10 +56,15 @@ function Puppyup() {
 
    return (
       <Provider store={store}>
+         <CurrentUser>
          <div>
             <div className="wd-top-bar">
                 <img className="wd-logo mx-3 my-3" src="logo.jpg" alt=""/>
                 <span className="wd-web-app-name">PuppyUp!</span>
+                <Link to="signin" className="btn btn-primary float-end mx-3 my-3">Sign In</Link>
+                <Link to="signup" className="btn btn-primary float-end mx-3 my-3">Sign Up</Link>
+                <Welcome />
+                
             </div>
             <div className="d-flex">
                <KanbasNavigation />
@@ -76,10 +89,16 @@ function Puppyup() {
                      <Route path="MarketPlace/:search" element={<Search />} />
                      <Route path="MarketPlace" element={<Search />} />
                      <Route path="MarketPlace/details/:itemId" element={<Details />} />
+                     <Route path="signin" element={<SignIn />} />
+                     <Route path="signup" element={<SignUp />} />
+                     <Route path="users" element={<UserList />} />
+                     <Route path="users/:id" element={<UserDetails />} />
+
                   </Routes>
                </div>
             </div>   
          </div>
+         </CurrentUser>
       </Provider>
    );
 }
