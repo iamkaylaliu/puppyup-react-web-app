@@ -5,8 +5,14 @@ const request = axios.create({
 });
 
 //to update
-const API_BASE = process.env.REACT_APP_API_BASE;
+// const API_BASE = process.env.REACT_APP_API_BASE;
+const API_BASE = "http://localhost:4000";
 const USERS_API = `${API_BASE}/api/users`;
+
+export const signup = async (user) => {
+  const response = await request.post(`${USERS_API}/signup`, user);
+  return response.data;
+};
 
 export const signin = async (credentials) => {
   const response = await request.post(`${USERS_API}/signin`, credentials);
@@ -32,8 +38,13 @@ export const findUserById = async (id) => {
   return response.data;
 };
 
-export const updateUser = async (id, user) => {
-  const response = await request.put(`${USERS_API}/${id}`, user);
+// export const updateUser = async (id, user) => {
+//   const response = await request.put(`${USERS_API}/${id}`, user);
+//   return response.data;
+// };
+
+export const updateUser = async (user) => {
+  const response = await request.put(`${USERS_API}/${user._id}`, user);
   return response.data;
 };
 

@@ -30,10 +30,16 @@ function UserDetails() {
     navigate("/Puppyup/users");
   };
   const followUser = async () => {
-    const status = await followsClient.userFollowsUser(id);
+    // const status = await followsClient.userFollowsUser(id);
+    await followsClient.userFollowsUser(id);
+    // Refetch followers after following
+    fetchFollowers();
   };
   const unfollowUser = async () => {
-    const status = await followsClient.userUnfollowsUser(id);
+    // const status = await followsClient.userUnfollowsUser(id);
+    await followsClient.userUnfollowsUser(id);
+    // Refetch followers after unfollowing
+    fetchFollowers();
   };
   const fetchFollowers = async () => {
     const followers = await followsClient.findFollowersOfUser(id);
@@ -117,7 +123,7 @@ function UserDetails() {
                 to={`/Puppyup/users/${follows.follower._id}`}
               >
                 {follows.follower.username}
-                {follows.follower._id}
+                {/* {follows.follower._id} */}
               </Link>
             ))}
           </div>
@@ -130,7 +136,7 @@ function UserDetails() {
                 to={`/Puppyup/users/${follows.followed._id}`}
               >
                 {follows.followed.username}
-                {follows.followed._id}
+                {/* {follows.followed._id} */}
               </Link>
             ))}
           </div>

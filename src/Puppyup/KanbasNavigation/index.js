@@ -9,14 +9,15 @@ import { PiMagnifyingGlassLight } from "react-icons/pi";
 import "./index.css";
 
 function KanbasNavigation() {
-    const links = ["Account", "Dashboard", "Courses", "Calendar", "MarketPlace"];
+    const links = ["Account", "Dashboard", "Courses", "Calendar", "MarketPlace", "Admin"];
 
     const linkToIconMap = {
         Account: <FaUser className="wd-icon" />,
         Dashboard: <TfiDashboard className="wd-icon" />,
         Courses: <BiSolidBook className="wd-icon" />,
         Calendar: <AiOutlineCalendar className="wd-icon" />,
-        MarketPlace: <PiMagnifyingGlassLight className="wd-icon" />
+        MarketPlace: <PiMagnifyingGlassLight className="wd-icon" />,
+        Admin: <FaUser className="wd-icon" />
     };
 
     const { pathname } = useLocation();

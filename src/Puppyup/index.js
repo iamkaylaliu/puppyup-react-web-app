@@ -18,6 +18,8 @@ import UserList from "./users/list";
 import UserDetails from "./users/details";
 import CurrentUser from "./users/currentUser";
 import Welcome from "./users/welcome";
+import Admin from "./users/admin";
+
 function Puppyup() {
    // const { currentUser } = useSelector((state) => state.userReducer);
    const [courses, setCourses] = useState(db.courses);
@@ -57,47 +59,49 @@ function Puppyup() {
    return (
       <Provider store={store}>
          <CurrentUser>
-         <div>
-            <div className="wd-top-bar">
-                <img className="wd-logo mx-3 my-3" src="logo.jpg" alt=""/>
-                <span className="wd-web-app-name">PuppyUp!</span>
-                <Link to="signin" className="btn btn-primary float-end mx-3 my-3">Sign In</Link>
-                <Link to="signup" className="btn btn-primary float-end mx-3 my-3">Sign Up</Link>
-                <Welcome />
-                
-            </div>
-            <div className="d-flex">
-               <KanbasNavigation />
-               <div  className="wd-sub flex-grow-1">
-                  <Routes>
-                     <Route path="/" element={<Navigate to="Dashboard" />} />
-                     <Route path="Account" element={<Account />} />
-                     <Route path="Dashboard" element={
-                        <Dashboard
-                           courses={courses}
-                           course={course}
-                           setCourse={setCourse}
-                           addNewCourse={addNewCourse}
-                           deleteCourse={deleteCourse}
-                           updateCourse={updateCourse} />
-                     } />
-                     <Route path="Courses" element={<Navigate to="RS101/Home" />} />
-                     <Route path="Courses/:courseId/*" element={
-                        <Courses courses={courses} />
-                     } />
-                     <Route path="Calendar" element={<h1>Calendar</h1>} />
-                     <Route path="MarketPlace/:search" element={<Search />} />
-                     <Route path="MarketPlace" element={<Search />} />
-                     <Route path="MarketPlace/details/:itemId" element={<Details />} />
-                     <Route path="signin" element={<SignIn />} />
-                     <Route path="signup" element={<SignUp />} />
-                     <Route path="users" element={<UserList />} />
-                     <Route path="users/:id" element={<UserDetails />} />
+            <div>
+               <div className="wd-top-bar">
+                  <img className="wd-logo mx-3 my-3" src="logo.jpg" alt="" />
+                  <span className="wd-web-app-name">PuppyUp!</span>
+                  <Link to="signin" className="btn btn-primary float-end mx-3 my-3">Sign In</Link>
+                  <Link to="signup" className="btn btn-primary float-end mx-3 my-3">Sign Up</Link>
+                  <Welcome />
 
-                  </Routes>
                </div>
-            </div>   
-         </div>
+               <div className="d-flex">
+                  <KanbasNavigation />
+                  <div className="wd-sub flex-grow-1">
+                     <Routes>
+                        <Route path="/" element={<Navigate to="Dashboard" />} />
+                        <Route path="Account" element={<Account />} />
+                        <Route path="Dashboard" element={
+                           <Dashboard
+                              courses={courses}
+                              course={course}
+                              setCourse={setCourse}
+                              addNewCourse={addNewCourse}
+                              deleteCourse={deleteCourse}
+                              updateCourse={updateCourse} />
+                        } />
+                        <Route path="Courses" element={<Navigate to="RS101/Home" />} />
+                        <Route path="Courses/:courseId/*" element={
+                           <Courses courses={courses} />
+                        } />
+                        <Route path="Calendar" element={<h1>Calendar</h1>} />
+                        <Route path="MarketPlace/:search" element={<Search />} />
+                        <Route path="MarketPlace" element={<Search />} />
+                        <Route path="MarketPlace/details/:itemId" element={<Details />} />
+                        <Route path="signin" element={<SignIn />} />
+                        <Route path="signup" element={<SignUp />} />
+                        {/* <Route path="users" element={<UserList />} /> */}
+                        <Route path="users/:id" element={<UserDetails />} />
+                        <Route path="admin" element={<UserList />} />
+                        <Route path="/admin/users" element={<UserList />} />
+
+                     </Routes>
+                  </div>
+               </div>
+            </div>
          </CurrentUser>
       </Provider>
    );
