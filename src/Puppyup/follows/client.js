@@ -1,7 +1,9 @@
 import axios from "axios";
 const client = axios.create({
   withCredentials: true,
-  baseURL: "http://localhost:4000/api/users",
+
+  baseURL : `${process.env.REACT_APP_API_BASE}/api/users`
+  // baseURL: "http://localhost:4000/api/users",
 });
 
 export const userFollowsUser = async (followed) => {

@@ -6,7 +6,7 @@ const request = axios.create({
 
 //to update
 // const API_BASE = process.env.REACT_APP_API_BASE;
-const API_BASE = "http://localhost:4000";
+const API_BASE = process.env.REACT_APP_API_BASE;
 const USERS_API = `${API_BASE}/api/users`;
 
 export const signup = async (user) => {
