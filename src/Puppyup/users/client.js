@@ -43,12 +43,17 @@ export const findUserById = async (id) => {
 //   return response.data;
 // };
 
-export const updateUser = async (user) => {
-  const response = await request.put(`${USERS_API}/${user._id}`, user);
+export const updateUser = async (id, user) => {
+  const response = await request.put(`${USERS_API}/${id}`, user);
   return response.data;
 };
 
 export const deleteUser = async (id) => {
   const response = await request.delete(`${USERS_API}/${id}`);
+  return response.data;
+};
+
+export const createUser = async (user) => {
+  const response = await request.post(`${USERS_API}`, {...user, _id: undefined});
   return response.data;
 };

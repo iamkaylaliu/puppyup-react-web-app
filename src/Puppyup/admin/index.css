@@ -1,0 +1,12 @@
+.nav a {
+    color: black;
+    font-size: 1.5rem;
+}
+
+.wd-user-link a {
+    text-decoration: none;
+}
+
+.wd-user-link a:hover {
+    text-decoration: underline;
+}

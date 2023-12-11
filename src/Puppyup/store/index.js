@@ -1,12 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import modulesReducer from "../Courses/Modules/modulesReducer";
-import assignmentsReducer from "../Courses/Assignments/assignmentsReducer";
 import userReducer from "../users/reducer";
+import searchReducer from "../Search/reducer";
 const store = configureStore({
     reducer: {
-        modulesReducer,
-        assignmentsReducer,
         userReducer,
+        searchReducer
     }
 });
 

@@ -3,26 +3,29 @@ import * as client from "./client";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import "../../index.css"
 import "./index.css"
+import { setCurrentSearch, setSearchResults } from "./reducer";
+import { useSelector, useDispatch } from "react-redux";
 
 function Search() {
   const { search } = useParams();
-  console.log('aaa', search)
-  const [searchTerm, setSearchTerm] = useState(search || "dog treat");
-  const [results, setResults] = useState(null);
+  const currentSearch = useSelector((state) => state.searchReducer.currentSearch);
+  const searchResults = useSelector((state) => state.searchReducer.searchResults);
+  const [searchTerm, setSearchTerm] = useState(search);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const fetchItems = async (search) => {
     const results = await client.findItems(search);
-    console.log(search);
-    setResults(results);
-    setSearchTerm(search);
+    dispatch(setSearchResults(results)); // Dispatch action to store results in Redux
+    dispatch(setCurrentSearch(search));
   };
 
   useEffect(() => {
-    if (search) {
-      fetchItems(search);
-    }
-  }, [search]);
+      if (search){
+        fetchItems(search);
+      }
+  }, [search, currentSearch]);
 
   return (
     <div className="wd-search">
@@ -34,14 +37,16 @@ function Search() {
           className="form-control w-50"
           placeholder="Search..."
           value={searchTerm}
-          onChange={(event) => {
-            setSearchTerm(event.target.value);
-          }}
+          onChange={(event) => {setSearchTerm(event.target.value)}
+          }
         />
         </div>
         <div className="col flex-grow-1 text-left">
           <button
-          onClick={() => navigate(`/Puppyup/MarketPlace/${searchTerm}`)}
+          onClick={() => {
+            dispatch(setCurrentSearch(searchTerm));
+            navigate(`/Puppyup/MarketPlace/${searchTerm}`);
+          }}
           className="btn btn-primary mx-2"
         >
           Search
@@ -51,11 +56,10 @@ function Search() {
       
       <div className="px-2 py-2 wd-search d-flex flex-row flex-wrap">
       <div className="row ms-0 me-0">
-        {results &&
-          results.itemSummaries.map((item, index) => (
+        {searchResults &&
+          searchResults.itemSummaries.map((item, index) => (
             <div key={index} className="card wd-card-width">
               <Link to={`/Puppyup/MarketPlace/details/${item.itemId}`}>
-                
                 <img
                   src={item.image.imageUrl}
                   alt={item.title}
@@ -69,8 +73,8 @@ function Search() {
             </div>
           ))}
       </div>
-              
       </div>
+
       {/* <pre>{JSON.stringify(results, null, 2)}</pre> */}
     </div>
   );

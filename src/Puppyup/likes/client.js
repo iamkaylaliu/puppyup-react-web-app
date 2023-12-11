@@ -10,7 +10,10 @@ export const createUserLikesItem = async (userId, itemId) => {
   const response = await axios.post(`${USERS_API}/${userId}/likes/${itemId}`);
   return response.data;
 };
-export const deleteUserLikesItem  = async (userId, itemId) => {};
+export const deleteUserLikesItem  = async (userId, itemId) => {
+    const response = await axios.delete(`${USERS_API}/${userId}/likes/${itemId}`);
+    return response.data;  
+};
 export const findUsersThatLikeItem  = async (itemId) => {
   const response = await axios.get(`${LIKES_API}/${itemId}/users`);
   return response.data;
@@ -18,4 +21,9 @@ export const findUsersThatLikeItem  = async (itemId) => {
 export const findItemsThatUserLikes = async (userId) => {
   const response = await axios.get(`${USERS_API}/${userId}/likes`);
   return response.data;
+};
+
+export const findLiked = async (userId, itemId) => {
+    const response = await axios.get(`${USERS_API}/${userId}/likes/${itemId}`);
+    return response.data;  
 };

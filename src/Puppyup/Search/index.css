@@ -42,3 +42,48 @@
     flex-direction: row;
 }
 
+.wd-like-list {
+    list-style: none;
+}
+
+.wd-like-list li {
+    display: inline-block !important;
+    margin-right: 10px;
+    font-size: 1.5rem;
+}
+
+.wd-like-list li:not(:last-child)::after {
+    content: ", ";
+    font-size: 1.5rem;
+}
+
+.wd-like-headshot {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+}
+
+.wd-like-list a {
+    text-decoration: none;
+    color: #232323;
+}
+
+.wd-like-list a:hover {
+    text-decoration: underline;
+}
+
+.wd-comment-list a {
+    text-decoration: none;
+    color: #232323;
+    font-size: 1.5rem;
+}
+
+.wd-comment-list a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+

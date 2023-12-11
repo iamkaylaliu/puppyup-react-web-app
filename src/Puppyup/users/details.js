@@ -4,15 +4,17 @@ import * as client from "./client";
 import * as likesClient from "../likes/client";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { findItemById } from "../Search/client";
 import * as followsClient from "../follows/client";
-function UserDetails() {
+function UserDetails({id}) {
   const [user, setUser] = useState(null);
   const [likes, setLikes] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
+  const [items, setItems] = useState([]);
+
   // const [currentUser, setCurrentUser] = useState(null); // [1
   const { currentUser } = useSelector((state) => state.userReducer);
-  const { id } = useParams();
   const fetchLikes = async () => {
     const likes = await likesClient.findItemsThatUserLikes(id);
     setLikes(likes);
@@ -27,7 +29,7 @@ function UserDetails() {
   };
   const deleteUser = async (id) => {
     const status = await client.deleteUser(id);
-    navigate("/Puppyup/users");
+    navigate("/Puppyup/Home");
   };
   const followUser = async () => {
     // const status = await followsClient.userFollowsUser(id);
@@ -35,6 +37,8 @@ function UserDetails() {
     // Refetch followers after following
     fetchFollowers();
   };
+
+  
   const unfollowUser = async () => {
     // const status = await followsClient.userUnfollowsUser(id);
     await followsClient.userUnfollowsUser(id);
@@ -58,6 +62,13 @@ function UserDetails() {
       return follows.follower._id === currentUser._id;
     });
   };
+
+  const fetchItems = async () => {
+    const itemsPromises = likes.map(like => findItemById(like.itemId));
+    const items = await Promise.all(itemsPromises);
+    setItems(items);
+}
+
   useEffect(() => {
     fetchUser();
     fetchLikes();
@@ -65,8 +76,15 @@ function UserDetails() {
     fetchFollowing();
     // fetchCurrentUser();
   }, [id]);
+
+  useEffect(() => {fetchItems();},[likes]);
+
+  if (!id) {
+    return <div/>
+  }
   return (
-    <div>
+    <div className="ms-2 me-3 my-2">
+
       {currentUser && currentUser._id !== id && (
         <>
           {alreadyFollowing() ? (
@@ -80,65 +98,145 @@ function UserDetails() {
           )}
         </>
       )}
-      <h2>User Details</h2>
       {user && (
         <div>
-          <p>Username: {user.username}</p>
-          <p>Email: {user.email}</p>
-          <p>
-            First Name:
-            <input
-              type="text"
-              className="form-control"
-              value={user.firstName}
-              onChange={(e) => setUser({ ...user, firstName: e.target.value })}
-            />
-          </p>
-          <p>Last Name: {user.lastName}</p>
-          <button onClick={updateUser} className="btn btn-primary">
-            Update
-          </button>
-          <button
-            onClick={() => deleteUser(user._id)}
-            className="btn btn-danger"
-          >
-            Delete
-          </button>
-          <h3>Likes</h3>
-          <ul className="list-group">
-            {likes.map((like, index) => (
-              <li key={index} className="list-group-item">
-                <Link to={`/Puppyup/details/${like.itemId}`}>
-                  {like.itemId}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <h3>Followers</h3>
-          <div className="list-group">
-            {followers.map((follows, index) => (
-              <Link
-                key={index}
-                className="list-group-item"
-                to={`/Puppyup/users/${follows.follower._id}`}
-              >
-                {follows.follower.username}
-                {/* {follows.follower._id} */}
-              </Link>
-            ))}
+          <h3 className="my-3">User Details</h3>
+
+          <div className="w-50">
+            
+            <div className="input-row">
+              <label htmlFor="username" className="label">
+                Username:
+              </label>
+              <input
+                value={user.username}
+                readOnly
+                className="form-control mb-2"
+              />
+            </div>
+            
+            <div className="input-row">
+                  <label htmlFor="gender" className="label">
+                    Gender:
+                  </label>
+                  <input
+                    value={user.gender}
+                    readOnly
+                    className="form-control mb-2" />
+                </div>
+
+                <div className="input-row">
+                  <label htmlFor="breed" className="label">
+                    Breed:
+                  </label>
+                  <input
+                    value={user.breed}
+                    readOnly
+                    className="form-control mb-2" />
+                </div>
+                
+            {currentUser && (currentUser._id == id || currentUser.role === "ADMIN") && (
+              <><div className="input-row">
+                <label htmlFor="firstname" className="label">
+                  Name:
+                </label>
+                <input
+                  value={user.firstName}
+                  readOnly
+                  className="form-control mb-2" />
+              </div><div className="input-row">
+                  <label htmlFor="dob" className="label">
+                    Date of Birth:
+                  </label>
+                  <input
+                    value={user.dob && user.dob.toString().split('T')[0]}
+                    readOnly
+                    className="form-control mb-2" />
+                </div><div className="input-row">
+                  <label htmlFor="email" className="label">
+                    Email:
+                  </label>
+                  <input
+                    value={user.email}
+                    readOnly
+                    className="form-control mb-2" />
+                </div>
+                <div className="input-row">
+                  <label htmlFor="primaryVet" className="label">
+                    Primary Vet:
+                  </label>
+                  <input
+                    value={user.primaryVet}
+                    readOnly
+                    className="form-control mb-2" />
+                </div>
+                <div className="input-row">
+                  <label htmlFor="Park" className="label">
+                    Park:
+                  </label>
+                  <input
+                    value={user.Park}
+                    readOnly
+                    className="form-control mb-2" />
+                </div>
+                <div className="input-row">
+                  <label htmlFor="role" className="label">
+                    Role:
+                  </label>
+                  <input
+                    value={user.role}
+                    readOnly
+                    className="form-control mb-2"
+                  />
+                </div>
+                </>
+            )}
+          </div>
+          <div className="my-2 wd-75">
+            <h3 className="mt-3 mb-2">Likes</h3>
+            <ul className="wd-like-list wd-list-override ms-0">
+              {items.map((item, index) => (
+                <li key={index}>
+                  <Link to={`/Puppyup/MarketPlace/details/${item.itemId}`}>
+                    {item.title} 
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <h3 className="my-3">Followers</h3>
+          <div className="row mx-2 my-2">
+            <ul className="wd-like-list my-2">
+              {followers.map((follows, index) => (
+                <li key={index}>
+                  <img src={follows.follower && follows.follower.headshot} className="wd-like-headshot" alt=""/>
+                  <Link
+                    key={index}
+                    to={`/Puppyup/Profile/users/${follows.follower && follows.follower._id}`}
+                  >
+                    @{follows.follower && follows.follower.username}
+                    {/* {follows.follower._id} */}
+                  </Link>
+                </li>    
+              ))}
+            </ul>  
           </div>
           <h3>Following</h3>
-          <div className="list-group">
-            {following.map((follows, index) => (
-              <Link
-                key={index}
-                className="list-group-item"
-                to={`/Puppyup/users/${follows.followed._id}`}
-              >
-                {follows.followed.username}
-                {/* {follows.followed._id} */}
-              </Link>
-            ))}
+          <div className="row mx-2 mt-2 my-3">
+            <ul className="wd-like-list my-2">
+              {following.map((follows, index) => (
+                <li key={index}>
+                  <img src={follows.followed && follows.followed.headshot} className="wd-like-headshot" alt=""/>
+                  <Link
+                    key={index}
+                    to={`/Puppyup/Profile/users/${follows.followed && follows.followed._id}`}
+                  >
+                    @{follows.followed && follows.followed.username}
+                    {/* {follows.followed._id} */}
+                  </Link>
+                </li>
+              ))}
+            </ul>  
           </div>
         </div>
       )}

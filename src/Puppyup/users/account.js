@@ -1,194 +1,140 @@
-// import * as client from "./client";
-// import { useEffect, useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-// import { useDispatch } from "react-redux";
-// import { setCurrentUser } from "./reducer";
-// import { useSelector } from "react-redux";
-// function Account() {
-//   const { currentUser } = useSelector((state) => state.userReducer);
-//   const user = currentUser;
-//   const navigate = useNavigate();
-//   const dispatch = useDispatch();
-//   const updateUser = async () => {
-//     const status = await client.updateUser(user._id, user);
-//   };
-//   const signout = async () => {
-//     const status = await client.signout();
-//     dispatch(setCurrentUser(null));
-//     navigate("/Puppyup/signin");
-//   };
-//   return (
-//     <div>
-//       <h1>Account</h1>
-//       {user && (
-//         <div>
-//           <p>Username: {user.username}</p>
-//           <input
-//             type="email"
-//             className="form-control"
-//             value={user.email}
-//             placeholder="email"
-//             onChange={(e) => dispatch(setCurrentUser({ ...user, email: e.target.value }))}
-//           />
-//           <input
-//             type="text"
-//             className="form-control"
-//             value={user.firstName}
-//             placeholder="first name"
-//             onChange={(e) => dispatch(setCurrentUser({ ...user, firstName: e.target.value }))}
-//           />
-//           <input
-//             type="text"
-//             className="form-control"
-//             value={user.lastName}
-//             placeholder="last name"
-//             onChange={(e) => dispatch(setCurrentUser({ ...user, lastName: e.target.value }))}
-//           />
-//           <button onClick={updateUser} className="btn btn-primary">
-//             Update
-//           </button>
-//           <button onClick={signout} className="btn btn-danger">
-//             Sign Out
-//           </button>
-//           {user.role === "ADMIN" && (
-//             <Link to="/Puppyup/users" className="btn btn-warning">
-//               Users
-//             </Link>
-//           )}
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default Account;
-
 import * as client from "./client";
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "./reducer";
+import { useSelector } from "react-redux";
 function Account() {
-  const { id } = useParams();
-  const [account, setAccount] = useState(null);
+  const { currentUser } = useSelector((state) => state.userReducer);
+  const user = currentUser;
+  console.log("a", user)
   const navigate = useNavigate();
-  const findUserById = async (id) => {
-    const user = await client.findUserById(id);
-    setAccount(user);
-  };
-  // const fetchAccount = async () => {
-  //     const account = await client.account();
-  //     setAccount(account);
-  // };
-  const fetchAccount = async (id) => {
-    try {
-      if (id) {
-        const account = await client.findUserById(id);
-        setAccount(account);
-      } else {
-        const account = await client.account();
-        setAccount(account);
-      }
-    } catch (err) {
-      navigate("/puppyup/signin");
-    }
-  };
-
-  const save = async () => {
-    await client.updateUser(account);
-    navigate(`/Puppyup/users/${account._id}`);
+  const dispatch = useDispatch();
+  const updateUser = async () => {
+    console.log(user._id);
+    const status = await client.updateUser(user._id,user);
   };
   const signout = async () => {
-    await client.signout();
-    navigate("/puppyup/signin");
+    const status = await client.signout();
+    dispatch(setCurrentUser(null));
+    navigate("/Puppyup/signin");
+  };
+  const deleteUser = async () => {
+    const status = await client.deleteUser(user._id);
+    dispatch(setCurrentUser(null));
+    navigate("/Puppyup/Home");
   };
 
-  useEffect(() => {
-    if (id) {
-      findUserById(id);
-    } else {
-      fetchAccount();
-    }
-  }, []);
   return (
-    <div className="w-50">
-      <h1>Account</h1>
-      {account && (
+    <div className="w-50 mx-2 my-2">
+      {!user && <h3>Sorry, you do not have access to the info...</h3>}
+      {user && (
         <div>
+          <h3 className="my-2">Account</h3>
+          <div className="input-row">
+            <label htmlFor="username" className="label">
+              Username:
+            </label>
+
           <input
-            value={account.username}
+            value={user.username}
             readOnly
             placeholder="username"
             className="form-control mb-2"
           />
-          <input value={account.password}
-            onChange={(e) => setAccount({
-              ...account,
-              password: e.target.value
-            })}
+          </div>
+          <div className="input-row">
+            <label htmlFor="password" className="label">
+              Password:
+            </label>
+          
+
+          <input value={user.password}
+            onChange={(e) => dispatch(setCurrentUser({ ...user, password: e.target.value }))}
             placeholder="password"
             className="form-control mb-2"
           />
-          <input value={account.firstName}
-            onChange={(e) => setAccount({
-              ...account,
-              firstName: e.target.value
-            })}
-            placeholder="firstname"
-            className="form-control mb-2"
-          />
-          <input value={account.lastName}
-            onChange={(e) => setAccount({
-              ...account,
-              lastName: e.target.value
-            })}
-            placeholder="lastname"
-            className="form-control mb-2"
-          />
-          <input value={account.dob}
-            onChange={(e) => setAccount({
-              ...account,
-              dob: e.target.value
-            })}
+          </div>
+          <div className="input-row">
+            <label htmlFor="firstname" className="label">
+              Name:
+            </label>
+
+            <input value={user.firstName}
+              onChange={(e) => dispatch(setCurrentUser({ ...user, firstName: e.target.value }))}
+              placeholder="firstname"
+              className="form-control mb-2"
+            />
+          </div>  
+          <div className="input-row">
+            <label htmlFor="dob" className="label">
+              Date of Birth:
+            </label>
+          <input value={user.dob}
+            onChange={(e) => dispatch(setCurrentUser({ ...user, dob: e.target.value }))}
             placeholder="dob"
             className="form-control mb-2"
           />
-          <input value={account.email}
-            onChange={(e) => setAccount({
-              ...account,
-              email: e.target.value
-            })}
-            placeholder="email"
+          </div>
+          <div className="input-row">
+            <label htmlFor="email" className="label">
+              Email:
+            </label>
+            <input value={user.email}
+              onChange={(e) => dispatch(setCurrentUser({ ...user, email: e.target.value }))}
+              placeholder="email"
+              className="form-control mb-2"
+            />
+          </div>
+          
+          <div className="input-row">
+            <label htmlFor="breed" className="label">
+              Breed:
+            </label>
+          <input value={user.breed}
+            onChange={(e) => dispatch(setCurrentUser({ ...user, breed: e.target.value }))}
+            placeholder="breed"
             className="form-control mb-2"
           />
-
-          {/* <select onChange={(e) => setAccount({
-            ...account,
-            role: e.target.value
-          })}
-            placeholder="role"
+          </div>
+          <div className="input-row">
+            <label htmlFor="gender" className="label">
+              Gender:
+            </label>
+            <select className="form-control mb-2" value={user.gender} onChange={(e) => dispatch(setCurrentUser({ ...user, gender: e.target.value }))}>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+          </div>
+          <div className="input-row">
+            <label htmlFor="primaryVet" className="label">
+              Primary Vet:
+            </label>
+          <input value={user.primaryVet}
+            onChange={(e) => dispatch(setCurrentUser({ ...user, primaryVet: e.target.value }))}
+            placeholder="primary vet"
             className="form-control mb-2"
-          >
-            <option value="USER">User</option>
-            <option value="VENDOR">Vendor</option>
-            {account.role === "ADMIN" && ( // Check if the user is an admin
-              <option value="ADMIN">Admin</option>
-            )}
-          </select>
-          <button onClick={save} className="btn btn-primary w-100 mb-2">
-            Save
-          </button>
-          <button onClick={signout} className="btn btn-danger w-100 mb-2">
-            Signout
-          </button>
-          {account.role === "ADMIN" && (
-            <Link to="/puppyup/admin/users" className="btn btn-warning w-100">
-              Users
-            </Link>
-          )} */}
-          {account.role === "ADMIN" ? (
+          />
+          </div>
+          <div className="input-row">
+            <label htmlFor="Park" className="label">
+              Favorite Park:
+            </label>
+            <input value={user.Park}
+              onChange={(e) => dispatch(setCurrentUser({ ...user, Park: e.target.value }))}
+              placeholder="park"
+              className="form-control mb-2"
+            />
+
+          </div>
+
+          <div className="input-row">
+            <label htmlFor="role" className="label">
+              Role:
+            </label>
+          {user.role === "ADMIN" ? (
             <select
-              value={account.role} // Display current role for admin
+              value={user.role} // Display current role for admin
               className="form-control mb-2"
               disabled // Disable the select field for admin
             >
@@ -196,13 +142,13 @@ function Account() {
             </select>
           ) : (
             <select
-              value={account.role} // Display current role for non-admin
+              value={user.role} // Display current role for non-admin
               onChange={(e) => {
                 const updatedAccount = {
-                  ...account,
+                  ...user,
                   role: e.target.value,
                 };
-                setAccount(updatedAccount);
+                dispatch(setCurrentUser({ ...user, dob: e.target.value }))
               }}
               className="form-control mb-2"
             >
@@ -210,20 +156,21 @@ function Account() {
               <option value="VENDOR">Vendor</option>
             </select>
           )}
-          <button onClick={save} className="btn btn-primary w-100 mb-2">
+          </div>
+          <button onClick={updateUser} className="btn btn-primary w-100 mb-2">
             Save
           </button>
           <button onClick={signout} className="btn btn-danger w-100 mb-2">
             Signout
           </button>
-          {account.role === "ADMIN" && (
-            <Link to="/puppyup/admin/users" className="btn btn-warning w-100">
-              Users
-            </Link>
-          )}
+          <button onClick={deleteUser} className="btn btn-secondary w-100 mb-2">
+            Delete Account
+          </button>
         </div>
       )}
     </div>
   );
+
 }
+
 export default Account;
