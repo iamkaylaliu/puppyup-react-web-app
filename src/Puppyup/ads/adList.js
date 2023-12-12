@@ -30,11 +30,12 @@ function AdList() {
 
   const createProduct = async () => {
     try {
-      const newProduct = await client.createProduct(product);
+      
+      const newProduct = await client.createProduct({...product, seller:currentUser._id});
       const sellersMap = new Map(sellers.map(seller => [seller._id, seller.username]));
       const getModifiedProduct = (newProduct) => {
-        const sellerName = product.seller ? sellersMap.get(product.seller) : '';
-        return { ...product, sellerName };
+        const sellerName = newProduct.seller ? sellersMap.get(newProduct.seller) : '';
+        return { ...newProduct, sellerName };
       };
       const modifiedProduct = getModifiedProduct(newProduct);
       setProducts([ ...products, modifiedProduct]);
