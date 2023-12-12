@@ -91,7 +91,7 @@ function MyPosts() {
         <div>
           <h3 className="my-3">MyPuppyPosts</h3>
           <div className="row">
-            <div className="col-1">
+            <div className="col-1 d-none d-md-block">
               <img src={user.headshot} className="wd-like-headshot me-2" alt="image"/>
             </div>
             <div className="col-11">
@@ -117,7 +117,7 @@ function MyPosts() {
                 comment.user && (
               <li key={comment._id} className="list-group-item">
                   <div className="row">
-                    <div className="col-1">
+                    <div className="col-1 d-none d-md-block">
                       <img src={comment.user && comment.user.headshot} className="wd-like-headshot me-2" alt=""/>
                     </div>
                     <div className="col-11 wd-post">

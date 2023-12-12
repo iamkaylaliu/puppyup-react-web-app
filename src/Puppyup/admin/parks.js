@@ -113,7 +113,7 @@ function ParkList() {
                       <td>
                         {park.location}
                       </td>
-                      <td>{park.sizeAcres}</td>
+                      <td className="text-end">{park.sizeAcres}</td>
                       <td className="text-nowrap">
                         <button className="btn btn-warning me-2">
                           <BsPencil onClick={() => selectPark(park._id)} />

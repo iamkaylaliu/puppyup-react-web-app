@@ -27,7 +27,9 @@ function Account() {
       const parksMap = new Map(parks.map(park => [park._id, park.parkName]));
       const vetName = user.primaryVet ? vetsMap.get(user.primaryVet) : '';
       const parkName = user.Park ? parksMap.get(user.Park) : '';
-      dispatch(setCurrentUser({...user, vetName, parkName}));
+      if (user) {
+        dispatch(setCurrentUser({...user, vetName, parkName}));
+      }
       console.log("bbc", user);
     } catch (err){
       console.log(err);

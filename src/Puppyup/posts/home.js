@@ -87,7 +87,7 @@ function Home () {
                         comment.user &&  
                         (<li key={comment._id} className="list-group-item">
                         <div className="row">
-                            <div className="col-1">
+                            <div className="col-1 d-none d-md-block">
                             {comment.user &&<img src={comment.user.headshot} className="wd-like-headshot me-2" alt=""/>}
                             </div>
                             <div className="col-11 wd-post">
