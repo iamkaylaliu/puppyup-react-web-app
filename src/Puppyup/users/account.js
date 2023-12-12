@@ -4,32 +4,73 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "./reducer";
 import { useSelector } from "react-redux";
+import { findAllVets } from "../admin/client";
+import { findAllParks } from "../admin/parkClient";
+
 function Account() {
   const { currentUser } = useSelector((state) => state.userReducer);
   const user = currentUser;
+  const [vets, setVets] = useState([]);
+  const [parks, setParks] = useState([]);
+
   console.log("a", user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
+  const fetchVetsandParks = async () => {
+    try {
+      const vets = await findAllVets();
+      setVets(vets);
+      const parks = await findAllParks();
+      setParks(parks);
+      const vetsMap = new Map(vets.map(vet => [vet._id, vet.vetName]));
+      const parksMap = new Map(parks.map(park => [park._id, park.parkName]));
+      const vetName = user.primaryVet ? vetsMap.get(user.primaryVet) : '';
+      const parkName = user.Park ? parksMap.get(user.Park) : '';
+      dispatch(setCurrentUser({...user, vetName, parkName}));
+      console.log("bbc", user);
+    } catch (err){
+      console.log(err);
+    }
+    
+  }
+
   const updateUser = async () => {
+    if (window.confirm("Are you sure to update your account?")){
     console.log(user._id);
-    const status = await client.updateUser(user._id,user);
+    const vetId = vets.filter(vet => vet.vetName === user.vetName).map(filterdVet => filterdVet._id);
+    const parkId = parks.filter(park => park.parkName === user.parkName).map(filterdPark => filterdPark._id);
+    const modifiedUser = {...user, primaryVet: vetId[0] ? vetId[0] : null , Park: parkId[0]? parkId[0]: null }
+    const status = await client.updateUser(user._id,modifiedUser);
+    dispatch(setCurrentUser(modifiedUser));
+    console.log("status", status)
+    console.log("cr", currentUser, user);
+    }  
   };
   const signout = async () => {
+    if (window.confirm("Are you sure to sign out?")){
     const status = await client.signout();
     dispatch(setCurrentUser(null));
     navigate("/Puppyup/signin");
+    }
   };
   const deleteUser = async () => {
-    const status = await client.deleteUser(user._id);
-    dispatch(setCurrentUser(null));
-    navigate("/Puppyup/Home");
+    if (window.confirm("Are you sure to delete your account?")){
+      const status = await client.deleteUser(user._id);
+      dispatch(setCurrentUser(null));
+      navigate("/Puppyup/Home");
+    }
   };
+  useEffect(()=> {
+    fetchVetsandParks()
+  }  , []
+  )
 
   return (
-    <div className="w-50 mx-2 my-2">
+    <div className="w-100 mx-2 my-2">
       {!user && <h3>Sorry, you do not have access to the info...</h3>}
       {user && (
-        <div>
+        <div className="w-50">
           <h3 className="my-2">Account</h3>
           <div className="input-row">
             <label htmlFor="username" className="label">
@@ -50,6 +91,7 @@ function Account() {
           
 
           <input value={user.password}
+          type="password"
             onChange={(e) => dispatch(setCurrentUser({ ...user, password: e.target.value }))}
             placeholder="password"
             className="form-control mb-2"
@@ -67,12 +109,12 @@ function Account() {
             />
           </div>  
           <div className="input-row">
-            <label htmlFor="dob" className="label">
+            <label htmlFor="birthday" className="label">
               Date of Birth:
             </label>
-          <input value={user.dob}
-            onChange={(e) => dispatch(setCurrentUser({ ...user, dob: e.target.value }))}
-            placeholder="dob"
+          <input value={user.birthday} type="date"
+            onChange={(e) => dispatch(setCurrentUser({ ...user, birthday: e.target.value }))}
+            placeholder="birthday"
             className="form-control mb-2"
           />
           </div>
@@ -110,21 +152,23 @@ function Account() {
             <label htmlFor="primaryVet" className="label">
               Primary Vet:
             </label>
-          <input value={user.primaryVet}
-            onChange={(e) => dispatch(setCurrentUser({ ...user, primaryVet: e.target.value }))}
-            placeholder="primary vet"
-            className="form-control mb-2"
-          />
+            <select className="form-control" value={user.vetName} onChange={(e) => dispatch(setCurrentUser({ ...user, vetName: e.target.value }))}>
+              <option value=""></option>
+              {vets.map(vet => (
+                <option key={vet._id} value={vet.vetName}>{vet.vetName}</option>
+              ))}
+            </select>
           </div>
           <div className="input-row">
             <label htmlFor="Park" className="label">
               Favorite Park:
             </label>
-            <input value={user.Park}
-              onChange={(e) => dispatch(setCurrentUser({ ...user, Park: e.target.value }))}
-              placeholder="park"
-              className="form-control mb-2"
-            />
+            <select className="form-control" value={user.parkName} onChange={(e) => dispatch(setCurrentUser({ ...user, parkName: e.target.value }))}>
+              <option value=""></option>
+              {parks.map(park => (
+                <option key={park._id} value={park.vetName}>{park.parkName}</option>
+              ))}
+            </select>
 
           </div>
 
@@ -148,7 +192,7 @@ function Account() {
                   ...user,
                   role: e.target.value,
                 };
-                dispatch(setCurrentUser({ ...user, dob: e.target.value }))
+                dispatch(setCurrentUser({ ...user, role: e.target.value }))
               }}
               className="form-control mb-2"
             >

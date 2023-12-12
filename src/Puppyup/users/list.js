@@ -9,6 +9,7 @@ import "./index.css";
 import * as vetsClient from "../admin/client"
 import { setCurrentUser } from "./reducer";
 import { findAllParks } from "../admin/parkClient";
+import { USERS_API } from "../posts/client";
 function UserList() {
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({ username: "", password: "", role: "USER" });
@@ -53,7 +54,16 @@ function UserList() {
   const createUser = async () => {
     try {
       const newUser = await client.createUser(user);
-      setUsers([newUser, ...users]);
+      console.log("create", user);
+      const vetsMap = new Map(vets.map(vet => [vet._id, vet.vetName]));
+      const parksMap = new Map(parks.map(park => [park._id, park.parkName]));
+      const getModifiedUser = (newUser) => {
+          const vetName = newUser.primaryVet ? vetsMap.get(newUser.primaryVet) : '';
+          const parkName = newUser.Park ? parksMap.get(newUser.Park) : '';
+          return { ...newUser, vetName, parkName };
+        };
+        const modifiedUser = getModifiedUser(newUser);
+        setUsers(users => [...users, modifiedUser]);
     } catch (err) {
       console.log(err);
     }
@@ -61,7 +71,7 @@ function UserList() {
 
   const selectUser = async (userId) => {
     try {
-      const u = await client.findUserById(userId);
+      const u = users.find((u) => u._id === userId);
       console.log(user.username)
       setUser(u);
     } catch (err) {
@@ -72,12 +82,15 @@ function UserList() {
     try {
       const vetId = vets.filter(vet => vet.vetName === user.vetName).map(filterdVet => filterdVet._id);
       const parkId = parks.filter(park => park.parkName === user.parkName).map(filterdPark => filterdPark._id);
-      const modifiedUser = {...user, primaryVet: vetId[0], Park: parkId[0], vetName:undefined, parkName:undefined}
+      const modifiedUser = {...user, primaryVet: vetId[0] ? vetId[0] : null , Park: parkId[0]? parkId[0]: null }
+      console.log("mu", modifiedUser)
       const status = await client.updateUser(user._id,modifiedUser);
       console.log("UserList",status);
-      setUsers(users.map((u) => (u._id === user._id ? user : u)));
+      fetchUsers();
+      // setUsers(users.map((u) => (u._id === user._id ? user : u)));
       if (currentUser._id===user._id) {
-        dispatch(setCurrentUser(user));
+        dispatch(setCurrentUser(modifiedUser));
+        console.log("update user", user)
       }
     } catch (err) {
       console.log(err);
@@ -151,6 +164,8 @@ function UserList() {
             </td>
             <td>
               <select className="form-control" value={user.vetName} onChange={(e) => setUser({ ...user, vetName: e.target.value })}>
+                {console.log("bbb",user.vetName)}
+                <option value=""></option>
                 {vets.map(vet => (
                   <option key={vet._id} value={vet.vetName}>{vet.vetName}</option>
                 ))}
@@ -158,6 +173,7 @@ function UserList() {
             </td>
             <td>
               <select className="form-control" value={user.parkName} onChange={(e) => setUser({ ...user, parkName: e.target.value })}>
+                <option value=""></option>
                 {parks.map(park => (
                   <option key={park._id} value={park.parkName}>{park.parkName}</option>
                 ))}
@@ -201,7 +217,7 @@ function UserList() {
                 <td>{user.breed}</td>
                 <td>{user.email}</td>
                 <td className="text-nowrap">
-                <button onClick={() => selectUser(user._id)}  className="btn btn-warning me-2">
+                <button onClick={() => {selectUser(user._id)}}  className="btn btn-warning me-2">
                     <BsPencil/>
                 </button>
                     <button className="me-2 btn btn-danger" onClick={() => deleteUser(user._id)}>

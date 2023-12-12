@@ -12,6 +12,7 @@ export const findAllParks = async () => {
 
 export const findParkById = async (id) => {
   const response = await request.get(`${PARKS_API}/${id}`);
+  console.log("client",response.data);
   return response.data;
 };
 

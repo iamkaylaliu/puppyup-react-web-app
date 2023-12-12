@@ -108,7 +108,7 @@ function ParkList() {
                   <>
                     <tr key={park._id}>
                       <td>
-                      <Link to={`/PuppyUp/Admin/parks/${park._id}`}>{park.parkName}</Link>
+                      <Link to={`/PuppyUp/Admin/parks/${park._id}`} style={{color:"black"}}>{park.parkName}</Link>
                       </td>
                       <td>
                         {park.location}

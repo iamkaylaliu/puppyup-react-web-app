@@ -4,23 +4,40 @@ import { Link } from "react-router-dom";
 import "./index.css"
 import sample from "./sample.jpg";
 import { useSelector } from "react-redux";
+import { findAllUsers } from "../users/client";
 import { BsTrash3Fill, BsPencil, BsPlusCircleFill, BsFillCheckCircleFill } from "react-icons/bs";
 
 function AdList() {
   const [products, setProducts] = useState([]);
-
-  const [product, setProduct] = useState({ title: "", shortDescription: "", price: "", condition: "", brand: "", shippingCost: "", shippingFrom: "" });
+  const [sellers, setSellers] = useState([]);
+  const [product, setProduct] = useState({ title: "", seller: "", shortDescription: "", price: "", condition: "", brand: "", shippingCost: "", shippingFrom: "" });
 
   const { currentUser } = useSelector((state) => state.userReducer);
 
   const fetchProducts = async () => {
     const productsList = await client.findAllProducts();
-    setProducts(productsList);
+    console.log(productsList);
+    const allUsers = await findAllUsers();
+    const vendors = allUsers.filter(user => user.role === "VENDOR");
+    setSellers(vendors);
+    const sellersMap = new Map(vendors.map(seller => [seller._id, seller.username]));
+    const productsWithSellerName = productsList.map(product => {
+      const sellerName = product.seller ? sellersMap.get(product.seller) : '';
+      return { ...product, sellerName };
+    });
+    setProducts(productsWithSellerName);
   };
+
   const createProduct = async () => {
     try {
       const newProduct = await client.createProduct(product);
-      setProducts([newProduct, ...products]);
+      const sellersMap = new Map(sellers.map(seller => [seller._id, seller.username]));
+      const getModifiedProduct = (newProduct) => {
+        const sellerName = product.seller ? sellersMap.get(product.seller) : '';
+        return { ...product, sellerName };
+      };
+      const modifiedProduct = getModifiedProduct(newProduct);
+      setProducts([ ...products, modifiedProduct]);
     } catch (err) {
       console.log(err);
     }
@@ -28,7 +45,7 @@ function AdList() {
 
   const selectProduct = async (productId) => {
     try {
-      const selectedProduct = await client.findProductById(productId);
+      const selectedProduct = products.find((p) => p._id === productId);
       setProduct(selectedProduct);
     } catch (err) {
       console.log(err);
@@ -37,8 +54,11 @@ function AdList() {
 
   const updateProduct = async () => {
     try {
-      await client.updateProduct(product._id, product);
-      setProducts(products.map((v) => (v._id === product._id ? product : v)));
+      const sellerId = sellers.filter(seller => seller.username === product.sellerName).map(filterdSeller => filterdSeller._id);
+      const modifiedProduct = {...product, seller: sellerId[0] ? sellerId[0] : null }
+      console.log("abc", modifiedProduct.sellerName)
+      await client.updateProduct(product._id, modifiedProduct );
+      fetchProducts();
     } catch (err) {
       console.log(err);
     }
@@ -88,7 +108,7 @@ function AdList() {
                     <input className="form-control" value={product.shortDescription} onChange={(e) => setProduct({ ...product, shortDescription: e.target.value })} />
                   </td>
                   <td>
-                  <input className="form-control" readOnly/>
+                  <input className="form-control" readOnly value={product.sellerName}  onChange={(e) => setProduct({ ...product, sellerName: e.target.value })} />
                   </td>
                   <td>
                     <input className="form-control" value={product.price} onChange={(e) => setProduct({ ...product, price: e.target.value })} />
@@ -119,7 +139,7 @@ function AdList() {
                       <td><img className="sample-image" src={sample} alt=""/></td>
                       <td>{product.title}</td>
                       <td>{product.shortDescription}</td>
-                      <td>{product.seller}</td>
+                      <td><Link to ={`/Puppyup/Profile/users/${product.seller}`} >{product.sellerName}</Link></td>
                       <td>$ {product.price}</td>
                       <td>{product.condition}</td>
                       <td>{product.brand}</td>

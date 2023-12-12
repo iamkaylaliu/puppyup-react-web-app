@@ -5,6 +5,8 @@ import * as likesClient from "../likes/client";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { findItemById } from "../Search/client";
+import { findVetById } from "../admin/client";
+import { findParkById } from "../admin/parkClient";
 import * as followsClient from "../follows/client";
 function UserDetails({id}) {
   const [user, setUser] = useState(null);
@@ -12,9 +14,29 @@ function UserDetails({id}) {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [items, setItems] = useState([]);
+  const [vetName, setVetName] = useState('');
+  const [parkName, setParkName] = useState('');
+
 
   // const [currentUser, setCurrentUser] = useState(null); // [1
   const { currentUser } = useSelector((state) => state.userReducer);
+  const fetchName = async () => {
+    try {
+      const vet = user.primaryVet ? await findVetById(user.primaryVet) : null;
+      const vetName = vet ? vet.vetName : "";  // Assuming the vet object has a property named 'vetName'
+      const park = user.Park ? await findParkById(user.Park) : null;
+      const parkName = park ? park.parkName : "";  // Assuming the vet object has a property named 'vetName'
+      // Use vetName here as needed
+      console.log("Vet Name:", vetName);
+      console.log("Park Name:", parkName, user.Park);
+      setVetName(vetName);
+      setParkName(parkName);
+    } catch (error) {
+        console.error("Error fetching vet name:", error);
+    }
+  }
+    
+  
   const fetchLikes = async () => {
     const likes = await likesClient.findItemsThatUserLikes(id);
     setLikes(likes);
@@ -77,6 +99,9 @@ function UserDetails({id}) {
     // fetchCurrentUser();
   }, [id]);
 
+  useEffect(() => {
+    fetchName();
+  },[user]);
   useEffect(() => {fetchItems();},[likes]);
 
   if (!id) {
@@ -134,6 +159,15 @@ function UserDetails({id}) {
                     readOnly
                     className="form-control mb-2" />
                 </div>
+                <div className="input-row">
+                  <label htmlFor="email" className="label">
+                    Email:
+                  </label>
+                  <input
+                    value={user.email}
+                    readOnly
+                    className="form-control mb-2" />
+                </div>
                 
             {currentUser && (currentUser._id == id || currentUser.role === "ADMIN") && (
               <><div className="input-row">
@@ -145,19 +179,11 @@ function UserDetails({id}) {
                   readOnly
                   className="form-control mb-2" />
               </div><div className="input-row">
-                  <label htmlFor="dob" className="label">
+                  <label htmlFor="birthday" className="label">
                     Date of Birth:
                   </label>
                   <input
-                    value={user.dob && user.dob.toString().split('T')[0]}
-                    readOnly
-                    className="form-control mb-2" />
-                </div><div className="input-row">
-                  <label htmlFor="email" className="label">
-                    Email:
-                  </label>
-                  <input
-                    value={user.email}
+                    value={user.birthday && user.birthday.toString().split('T')[0]}
                     readOnly
                     className="form-control mb-2" />
                 </div>
@@ -166,7 +192,7 @@ function UserDetails({id}) {
                     Primary Vet:
                   </label>
                   <input
-                    value={user.primaryVet}
+                    value={vetName}
                     readOnly
                     className="form-control mb-2" />
                 </div>
@@ -175,7 +201,7 @@ function UserDetails({id}) {
                     Park:
                   </label>
                   <input
-                    value={user.Park}
+                    value={parkName}
                     readOnly
                     className="form-control mb-2" />
                 </div>

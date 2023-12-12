@@ -123,7 +123,7 @@ function VetList() {
                 <>
                 <tr key={vet._id}>
                 <td>
-                  <Link to={`/PuppyUp/Admin/vets/${vet._id}`}>{vet.vetName}</Link>
+                  <Link to={`/PuppyUp/Admin/vets/${vet._id}`}  style={{color:"black"}}>{vet.vetName}</Link>
                 </td>
                 <td>
                     {vet.address}

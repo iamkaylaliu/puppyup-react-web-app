@@ -135,6 +135,7 @@ function Details() {
             </div>
             <div className="mx-3 my-2 w-75">
               <h2>Comments</h2>
+              {currentUser &&
                 <div>    
                   <textarea className = "my-3 form-control" 
                   placeholder="Your comments here..."
@@ -144,7 +145,7 @@ function Details() {
                   <br/>
                   <br/>
                   <br/>
-                </div>  
+                </div> }
                 <div className="w-100">
                   <ul className="my-3 ms-0 list-group wd-comment-list">
                     {comments && comments.map((comment) => (
